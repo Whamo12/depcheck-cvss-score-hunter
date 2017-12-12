@@ -19,7 +19,7 @@ public class CvssScoreHunter {
 			Scanner scan = new Scanner(System.in);
 			String pathToFile = " ";
 			String proxy = null;
-			String proxyPort = null;
+			int proxyPort = 0;
 			String proxyUser = null;
 			String proxyPass = null;
 			String isProxy = null;
@@ -35,7 +35,7 @@ public class CvssScoreHunter {
 					System.out.print("Proxy Host: ");
 					proxy = scan.next();
 					System.out.print("Proxy Port: ");
-					proxyPort = scan.next();
+					proxyPort = scan.nextInt();
 					System.out.print("Proxy User: ");
 					proxyUser = scan.next();
 					System.out.print("Proxy Password: ");
@@ -59,15 +59,15 @@ public class CvssScoreHunter {
 			
 			for(String link : cveLinks) {
 				try {
-					if(proxy != null && proxyPort != null && proxyUser != null && proxyPass != null) {
-						System.setProperty("https.proxyHost", proxy);
-						System.setProperty("https.proxyPort", proxyPort);
+					if(proxy != null && proxyPort != 0 && proxyUser != null && proxyPass != null) {
+						//System.setProperty("https.proxyHost", proxy);
+						//System.setProperty("https.proxyPort", proxyPort);
 						System.setProperty("https.proxyUser", proxyUser);
 						System.setProperty("https.proxyPassword", proxyPass);
-						System.out.println("Proxy info: " + proxy + " " + proxyPort + " " + proxyUser + " " + proxyPass);
 					}
 					Document cveDoc = Jsoup.connect(link)
-							.timeout(0)
+							.proxy(proxy, proxyPort)
+							.timeout(10000)
 							.userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
 							//.referrer("http://www.google.com")
 							.get();
