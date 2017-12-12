@@ -60,10 +60,10 @@ public class CvssScoreHunter {
 			for(String link : cveLinks) {
 				try {
 					if(proxy != null && proxyPort != null && proxyUser != null && proxyPass != null) {
-						System.setProperty("http.proxyHost", proxy);
-						System.setProperty("http.proxyPort", proxyPort);
-						System.setProperty("http.proxyUser", proxyUser);
-						System.setProperty("http.proxyPassword", proxyPass);
+						System.setProperty("https.proxyHost", proxy);
+						System.setProperty("https.proxyPort", proxyPort);
+						System.setProperty("https.proxyUser", proxyUser);
+						System.setProperty("https.proxyPassword", proxyPass);
 						System.out.println("Proxy info: " + proxy + " " + proxyPort + " " + proxyUser + " " + proxyPass);
 					}
 					Document cveDoc = Jsoup.connect(link)
