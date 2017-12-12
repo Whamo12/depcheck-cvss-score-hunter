@@ -18,11 +18,30 @@ public class CvssScoreHunter {
 	public static void main(String[] args) {
 			Scanner scan = new Scanner(System.in);
 			String pathToFile = " ";
-			System.out.print("Enter path/to/HTML/report:");
+			String proxy = null;
+			String proxyPort = null;
+			String proxyUser = null;
+			String proxyPass = null;
+			String isProxy = null;
+
 			try {
+				System.out.print("Enter path/to/HTML/report:");
 				Path currentRelativePath = Paths.get("");
 				String s = currentRelativePath.toAbsolutePath().toString();
 				pathToFile = scan.next();
+				System.out.print("Proxy? (y/n):");
+				isProxy = scan.next();
+				if(isProxy.equalsIgnoreCase("y")) {
+					System.out.print("Proxy Host: ");
+					proxy = scan.next();
+					System.out.print("Proxy Port: ");
+					proxyPort = scan.next();
+					System.out.print("Proxy User: ");
+					proxyUser = scan.next();
+					System.out.print("Proxy Password: ");
+					proxyPass = scan.next();
+				}
+				
 			} catch(Exception e) {
 				e.printStackTrace();
 			} finally {
@@ -40,7 +59,13 @@ public class CvssScoreHunter {
 			
 			for(String link : cveLinks) {
 				try {
-					Document cveDoc = Jsoup.connect(link).timeout(300000)
+					if(proxy != null && proxyPort != null && proxyUser != null && proxyPass != null) {
+						System.setProperty("http.proxyHost", proxy);
+						System.setProperty("http.proxyPort", proxyPort);
+						System.setProperty("http.proxyUser", proxyUser);
+						System.setProperty("http.proxyPass", proxyPass);
+					}
+					Document cveDoc = Jsoup.connect(link)
 							.userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_16) Gecko/20100101 Firefox/25.0")
 							.referrer("http://www.google.com")
 							.validateTLSCertificates(false).get(); 
