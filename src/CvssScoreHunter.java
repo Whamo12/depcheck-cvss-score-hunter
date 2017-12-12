@@ -18,7 +18,7 @@ public class CvssScoreHunter {
 	public static void main(String[] args) {
 			Scanner scan = new Scanner(System.in);
 			String pathToFile = " ";
-			System.out.print("Enter path/to/HTML:");
+			System.out.print("Enter path/to/HTML/report:");
 			try {
 				Path currentRelativePath = Paths.get("");
 				String s = currentRelativePath.toAbsolutePath().toString();
@@ -46,10 +46,10 @@ public class CvssScoreHunter {
 							.validateTLSCertificates(false).get(); 
 					
 					getCvssScores(cveDoc);
-				} catch (Exception e) {
-					
+				} 
+				catch (Exception e) {
+					e.printStackTrace();
 				}
-				//System.out.println("Link: " + link);
 			}
 	}
 	
@@ -73,13 +73,6 @@ public class CvssScoreHunter {
 	public static Document getCvssScores(Document cveDoc) {
 		if(cveDoc != null) {
 			Elements dl = cveDoc.getElementsByTag("dl");
-			Elements h1Tags = cveDoc.getElementsByTag("h1");
-			
-			for(Element h : h1Tags) {
-				if(h.hasAttr("data-testid")) {
-					System.out.println(h.text().replace("Detail", ""));
-				}
-			}
 
 			for(Element dd : dl) {
 				Elements dtTag = dd.getElementsByTag("dt");
@@ -154,6 +147,7 @@ public class CvssScoreHunter {
 	         }
 	    	 System.out.println(count + " Links(s) identified...");
 	    	 System.out.println("Hunting...");
+	    	 System.out.println("");
 	    	 return links;
     }
     
