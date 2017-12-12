@@ -63,12 +63,13 @@ public class CvssScoreHunter {
 						System.setProperty("http.proxyHost", proxy);
 						System.setProperty("http.proxyPort", proxyPort);
 						System.setProperty("http.proxyUser", proxyUser);
-						System.setProperty("http.proxyPass", proxyPass);
+						System.setProperty("http.proxyPassword", proxyPass);
 					}
 					Document cveDoc = Jsoup.connect(link)
 							.userAgent("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_16) Gecko/20100101 Firefox/25.0")
 							.referrer("http://www.google.com")
-							.validateTLSCertificates(false).get(); 
+							.validateTLSCertificates(false)
+							.get();
 					
 					getCvssScores(cveDoc);
 				} 
