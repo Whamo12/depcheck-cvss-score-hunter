@@ -1,20 +1,14 @@
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Spliterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -24,7 +18,7 @@ public class CvssScoreHunter {
 	public static void main(String[] args) {
 			Scanner scan = new Scanner(System.in);
 			String pathToFile = " ";
-			
+			System.out.print("Enter path/to/HTML:");
 			try {
 				Path currentRelativePath = Paths.get("");
 				String s = currentRelativePath.toAbsolutePath().toString();
@@ -135,10 +129,8 @@ public class CvssScoreHunter {
 	}	
     public static List<String> getLinks(Elements a, Elements tr) {
 	    	List<String> links = new ArrayList<String>();
-	    	List<String> headers = new ArrayList<String>();
-	    	String string = null;
-	    	String name = null;
-	    	String[] parts = null;
+	    	//String string = null;
+	    	//String name = null;
 	    	
 	    	int count = 0;
 	    	
@@ -149,9 +141,9 @@ public class CvssScoreHunter {
 	        	 	if(el.attr("href") != null && !el.attr("href").isEmpty()) {
 	        	 		if(el.attr("href").contains("http://web.nvd.nist.gov/view/vuln/detail?vulnId=")) {
 	        	 			//System.out.println(el.parent().parent().getElementsByAttributeValueContaining("onclick", "copyText"));
-	        	 			string = el.parent().parent().getElementsByAttributeValueContaining("onclick", "copyText").toString();
+	        	 			//string = el.parent().parent().getElementsByAttributeValueContaining("onclick", "copyText").toString();
 	        	 			//System.out.println(string);
-	        	 			parts = string.split("\\s+");
+	        	 			//parts = string.split("\\s+");
 	        	 			//System.out.println(parts[13]);
 	        	 			
 	        	 			links.add(el.attr("href"));
