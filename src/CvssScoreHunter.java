@@ -22,24 +22,31 @@ public class CvssScoreHunter {
 			int proxyPort = 0;
 			String proxyUser = null;
 			String proxyPass = null;
-			String isProxy = null;
+			String userProxy = null;
+			Boolean isProxy = false;
 
 			try {
-				System.out.print("Enter path/to/HTML/report:");
+				System.out.print("Enter path/to/HTML/report: ");
 				Path currentRelativePath = Paths.get("");
 				String s = currentRelativePath.toAbsolutePath().toString();
 				pathToFile = scan.next();
-				System.out.print("Proxy? (y/n):");
-				isProxy = scan.next();
-				if(isProxy.equalsIgnoreCase("y")) {
+				System.out.print("Proxy? (y/n): ");
+				userProxy = scan.next();
+				
+				if(userProxy.equalsIgnoreCase("y")) {
+					isProxy = true;
 					System.out.print("Proxy Host: ");
 					proxy = scan.next();
 					System.out.print("Proxy Port: ");
 					proxyPort = scan.nextInt();
-					System.out.print("Proxy User: ");
-					proxyUser = scan.next();
-					System.out.print("Proxy Password: ");
-					proxyPass = scan.next();
+					System.out.print("Credentials required? (y/n): ");
+					String requireCreds = scan.next();
+					if(requireCreds.equalsIgnoreCase("y")) {
+						System.out.print("Proxy User: ");
+						proxyUser = scan.next();
+						System.out.print("Proxy Password: ");
+						proxyPass = scan.next();
+					}
 				}
 				
 			} catch(Exception e) {
@@ -59,21 +66,35 @@ public class CvssScoreHunter {
 			
 			for(String link : cveLinks) {
 				try {
-					if(proxy != null && proxyPort != 0 && proxyUser != null && proxyPass != null) {
+					if(isProxy = true && proxy != null && proxyPort != 0 
+							&& proxyUser != null && proxyPass != null) {
 						//System.setProperty("https.proxyHost", proxy);
 						//System.setProperty("https.proxyPort", proxyPort);
-						System.setProperty("https.proxyUser", proxyUser);
-						System.setProperty("https.proxyPassword", proxyPass);
+						System.setProperty("http.proxyUser", proxyUser);
+						System.setProperty("http.proxyPassword", proxyPass);
 					}
-					Document cveDoc = Jsoup.connect(link)
-							.proxy(proxy, proxyPort)
-							.followRedirects(true)
-							.timeout(10000)
-							.userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-							//.referrer("http://www.google.com")
-							.get();
+					if(isProxy) {
+						Document cveDoc = Jsoup.connect(link)
+								.proxy(proxy, proxyPort)
+								.timeout(10000)
+								.userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+								.referrer("http://www.google.com")
+								.validateTLSCertificates(false)
+								.get();
+						
+						getCvssScores(cveDoc);
+					}
+					else {
+						Document cveDoc = Jsoup.connect(link)
+								.timeout(10000)
+								.userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+								.referrer("http://www.google.com")
+								.validateTLSCertificates(false)
+								.get();
+						
+						getCvssScores(cveDoc);
+					}
 					
-					getCvssScores(cveDoc);
 				} 
 				catch (Exception e) {
 					e.printStackTrace();
