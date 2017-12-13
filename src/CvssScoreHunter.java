@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 
 import org.jsoup.nodes.Document;
@@ -63,16 +64,27 @@ public class CvssScoreHunter {
 			for(String link : cveLinks) {
 				try {
 					if(isProxy = true && proxy != null && proxyPort != 0) {
-						Document cveDoc = Jsoup.connect(link)
+						Response response = Jsoup.connect(link)
 								.proxy(proxy, proxyPort)
 								.timeout(10000)
 								.userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
 								.referrer("http://www.google.com")
 								.validateTLSCertificates(false)
 								.followRedirects(true)
-								.get();
+								.execute();
 						
-						getCvssScores(cveDoc);
+						int statusCode = response.statusCode();
+						if(statusCode == 200) {
+							Document cveDoc = Jsoup.connect(link)
+									.proxy(proxy, proxyPort)
+									.timeout(10000)
+									.userAgent("Mozilla/5.0 (Windows; U; WindowsNT 5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+									.referrer("http://www.google.com")
+									.validateTLSCertificates(false)
+									.followRedirects(true)
+									.get();
+							getCvssScores(cveDoc);
+						}	
 					}
 					else {
 						Document cveDoc = Jsoup.connect(link)
