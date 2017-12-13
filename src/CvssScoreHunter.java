@@ -10,8 +10,6 @@ import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class CvssScoreHunter {
 
@@ -23,12 +21,10 @@ public class CvssScoreHunter {
 			String proxyUser = null;
 			String proxyPass = null;
 			String userProxy = null;
-			Boolean isProxy = false;
+			boolean isProxy = false;
 
 			try {
 				System.out.print("Enter path/to/HTML/report: ");
-				Path currentRelativePath = Paths.get("");
-				String s = currentRelativePath.toAbsolutePath().toString();
 				pathToFile = scan.next();
 				System.out.print("Proxy? (y/n): ");
 				userProxy = scan.next();
@@ -44,8 +40,10 @@ public class CvssScoreHunter {
 					if(requireCreds.equalsIgnoreCase("y")) {
 						System.out.print("Proxy User: ");
 						proxyUser = scan.next();
+						System.setProperty("http.proxyUser", proxyUser);
 						System.out.print("Proxy Password: ");
 						proxyPass = scan.next();
+						System.setProperty("http.proxyPassword", proxyPass);
 					}
 				}
 				
@@ -57,8 +55,6 @@ public class CvssScoreHunter {
 			//Get HTML Document
 			Document doc = getDepCheckDoc(pathToFile);
 			Elements tr = doc.getElementsByAttributeValue("class", "vulnerable");
-			//Find all vuln libraries
-			Elements h3Tag = doc.getElementsByTag("h3");
 			//Fine all <a> tags
 			Elements aTag = doc.getElementsByTag("a");
 			//Get links!
@@ -66,14 +62,7 @@ public class CvssScoreHunter {
 			
 			for(String link : cveLinks) {
 				try {
-					if(isProxy = true && proxy != null && proxyPort != 0 
-							&& proxyUser != null && proxyPass != null) {
-						//System.setProperty("https.proxyHost", proxy);
-						//System.setProperty("https.proxyPort", proxyPort);
-						System.setProperty("http.proxyUser", proxyUser);
-						System.setProperty("http.proxyPassword", proxyPass);
-					}
-					if(isProxy) {
+					if(isProxy = true && proxy != null && proxyPort != 0) {
 						Document cveDoc = Jsoup.connect(link)
 								.proxy(proxy, proxyPort)
 								.timeout(10000)
