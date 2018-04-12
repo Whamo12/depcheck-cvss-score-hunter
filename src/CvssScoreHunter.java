@@ -41,10 +41,10 @@ public class CvssScoreHunter {
 					if(requireCreds.equalsIgnoreCase("y")) {
 						System.out.print("Proxy User: ");
 						proxyUser = scan.next();
-						//System.setProperty("http.proxyUser", proxyUser);
+						System.setProperty("http.proxyUser", proxyUser);
 						System.out.print("Proxy Password: ");
 						proxyPass = scan.next();
-						//System.setProperty("http.proxyPassword", proxyPass);
+						System.setProperty("http.proxyPassword", proxyPass);
 					}
 				}
 				
