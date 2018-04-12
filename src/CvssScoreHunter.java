@@ -18,7 +18,7 @@ public class CvssScoreHunter {
 			Scanner scan = new Scanner(System.in);
 			String pathToFile = " ";
 			String proxy = null;
-			int proxyPort = 0;
+			int proxyPort = null;
 			String proxyUser = null;
 			String proxyPass = null;
 			String userProxy = null;
@@ -35,7 +35,7 @@ public class CvssScoreHunter {
 					System.out.print("Proxy Host: ");
 					proxy = scan.next();
 					System.out.print("Proxy Port: ");
-					proxyPort = scan.nextInt();
+					proxyPort = scan.next();
 					System.out.print("Credentials required? (y/n): ");
 					String requireCreds = scan.next();
 					if(requireCreds.equalsIgnoreCase("y")) {
